@@ -38,34 +38,34 @@ The system is designed around three core principles:
 
 ```
   ╔══════════════════════════════════════════════════════════════════════════╗
-  ║                         PRESENTATION LAYER                              ║
+  ║                         PRESENTATION LAYER                               ║
   ║                                                                          ║
-  ║   ┌─────────────────────────────────────────────────────────────────┐   ║
-  ║   │               Next.js Frontend (TailwindCSS)                    │   ║
-  ║   │                                                                  │   ║
-  ║   │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────┐  │   ║
-  ║   │  │ Job Feed │ │ Resumes  │ │  Tracker │ │Interview │ │ Chat │  │   ║
-  ║   │  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────┘  │   ║
-  ║   └─────────────────────────┬───────────────────────────────────────┘   ║
+  ║   ┌─────────────────────────────────────────────────────────────────┐    ║
+  ║   │               Next.js Frontend (TailwindCSS)                    │    ║
+  ║   │                                                                 │    ║
+  ║   │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────┐   │    ║
+  ║   │  │ Job Feed │ │ Resumes  │ │  Tracker │ │Interview │ │ Chat │   │    ║
+  ║   │  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────┘   │    ║
+  ║   └─────────────────────────┬───────────────────────────────────────┘    ║
   ║                             │  HTTPS / JWT Bearer                        ║
   ╚═════════════════════════════╪════════════════════════════════════════════╝
                                 │
   ╔═════════════════════════════╪════════════════════════════════════════════╗
   ║                      APPLICATION LAYER                                   ║
   ║                             │                                            ║
-  ║   ┌─────────────────────────▼───────────────────────────────────────┐   ║
-  ║   │                    FastAPI  (Uvicorn)                            │   ║
-  ║   │                                                                  │   ║
-  ║   │  /auth    /jobs    /applications    /resumes    /cover-letters   │   ║
-  ║   │  /agent   /analytics               /chat                        │   ║
-  ║   └──────┬──────────────────────────────────────┬───────────────────┘   ║
-  ║          │ SQLAlchemy (asyncpg)                  │ Celery .delay()        ║
+  ║   ┌─────────────────────────▼───────────────────────────────────────┐    ║
+  ║   │                    FastAPI  (Uvicorn)                           │    ║
+  ║   │                                                                 │    ║
+  ║   │  /auth    /jobs    /applications    /resumes    /cover-letters  │    ║
+  ║   │  /agent   /analytics               /chat                        │    ║
+  ║   └──────┬──────────────────────────────────────┬───────────────────┘    ║
+  ║          │ SQLAlchemy (asyncpg)                  │ Celery .delay()       ║
   ╚══════════╪══════════════════════════════════════╪════════════════════════╝
              │                                      │
   ╔══════════╪══════════════╗    ╔══════════════════╪════════════════════════╗
   ║   DATA LAYER            ║    ║          WORKER LAYER                     ║
-  ║          │              ║    ║                  │                         ║
-  ║   ┌──────▼──────┐       ║    ║   ┌──────────────▼──────────────────┐    ║
+  ║          │              ║    ║                  │                        ║
+  ║   ┌──────▼──────┐       ║    ║   ┌──────────────▼──────────────────┐     ║
   ║   │ PostgreSQL  │       ║    ║   │        Celery Workers            │    ║
   ║   │             │       ║    ║   │                                  │    ║
   ║   │  users      │       ║    ║   │  queue: scraping                 │    ║
@@ -82,12 +82,12 @@ The system is designed around three core principles:
   ║   └─────────────┘       ║    ║   │                                  │    ║
   ║                         ║    ║   │  queue: notifications            │    ║
   ║   ┌─────────────┐       ║    ║   │    Telegram · SMTP email         │    ║
-  ║   │  ChromaDB   │       ║    ║   └────────────────┬─────────────────┘   ║
+  ║   │  ChromaDB   │       ║    ║   └────────────────┬─────────────────┘    ║
   ║   │             │       ║    ║                    │                      ║
-  ║   │  user_      │       ║    ║   ┌────────────────▼─────────────────┐   ║
-  ║   │  profile    │       ║    ║   │           Redis 7                │   ║
-  ║   │  jobs       │       ║    ║   │   Broker (db 0) · Backend (db 1) │   ║
-  ║   │  resumes    │       ║    ║   └──────────────────────────────────┘   ║
+  ║   │  user_      │       ║    ║   ┌────────────────▼─────────────────┐    ║
+  ║   │  profile    │       ║    ║   │           Redis 7                │    ║
+  ║   │  jobs       │       ║    ║   │   Broker (db 0) · Backend (db 1) │    ║
+  ║   │  resumes    │       ║    ║   └──────────────────────────────────┘    ║
   ║   └─────────────┘       ║    ╚════════════════════════════════════════════╝
   ╚═════════════════════════╝
                                    ╔════════════════════════════════════════╗
@@ -127,12 +127,12 @@ The central automation cycle executes every 6 hours via `run_main_agent_cycle`. 
   STAGE 1: JOB DISCOVERY                          queue: scraping
   ┌──────────────────────────────────────────────────────────────────────┐
   │                                                                      │
-  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌─────────┐ │
-  │  │   LinkedIn   │  │    Indeed    │  │  Internshala │  │Wellfound│ │
-  │  │   Scraper    │  │   Scraper    │  │   Scraper    │  │ Scraper │ │
-  │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └────┬────┘ │
-  │         │                 │                  │               │      │
-  │         └─────────────────┴──────────────────┴───────────────┘      │
+  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌─────────┐   │
+  │  │   LinkedIn   │  │    Indeed    │  │  Internshala │  │Wellfound│   │
+  │  │   Scraper    │  │   Scraper    │  │   Scraper    │  │ Scraper │   │
+  │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └────┬────┘   │
+  │         │                 │                  │               │       │
+  │         └─────────────────┴──────────────────┴───────────────┘       │
   │                                     │                                │
   │                            ScrapedJob objects                        │
   │                    (deduplication by source_job_id)                  │
@@ -147,9 +147,9 @@ The central automation cycle executes every 6 hours via `run_main_agent_cycle`. 
   │   PASS 1 — Batch filter with GPT-4o-mini  (cheap, fast)              │
   │   ┌────────────────────────────────────────────────────────────┐     │
   │   │  For every NEW job:                                        │     │
-  │   │  Score against USER_DESIRED_ROLES, USER_EXPERIENCE_LEVEL  │     │
-  │   │  Jobs below threshold  → status = SKIPPED                 │     │
-  │   │  Jobs above threshold  → advance to Pass 2                │     │
+  │   │  Score against USER_DESIRED_ROLES, USER_EXPERIENCE_LEVEL   │     │
+  │   │  Jobs below threshold  → status = SKIPPED                  │     │
+  │   │  Jobs above threshold  → advance to Pass 2                 │     │
   │   └────────────────────────────────────────────────────────────┘     │
   │                                                                      │
   │   PASS 2 — Deep analysis with GPT-4o  (high-value candidates only)   │
@@ -175,21 +175,21 @@ The central automation cycle executes every 6 hours via `run_main_agent_cycle`. 
   │                                                                      │
   │   For each qualifying job, in parallel:                              │
   │                                                                      │
-  │   ┌──────────────────────────┐   ┌──────────────────────────────┐   │
-  │   │    Resume Generation     │   │   Cover Letter Generation    │   │
-  │   │                          │   │                              │   │
-  │   │  Load base resume        │   │  Load company context        │   │
-  │   │  Load JobAnalysis        │   │  Load JobAnalysis            │   │
-  │   │  GPT-4o rewrites:        │   │  GPT-4o generates:           │   │
-  │   │  - Professional summary  │   │  - Opening paragraph         │   │
-  │   │  - Experience bullets    │   │  - Skills alignment          │   │
-  │   │  - Project bullets       │   │  - Company-specific closing  │   │
-  │   │  - Skills to highlight   │   │                              │   │
-  │   │  - Inject ATS keywords   │   │  Tone: professional / tech   │   │
-  │   │  - Estimate ATS score    │   │  Stored as versioned record  │   │
-  │   │  Render to PDF           │   │  Attached to Application     │   │
-  │   │  Stored in /storage/     │   │                              │   │
-  │   └──────────────────────────┘   └──────────────────────────────┘   │
+  │   ┌──────────────────────────┐   ┌──────────────────────────────┐    │
+  │   │    Resume Generation     │   │   Cover Letter Generation    │    │
+  │   │                          │   │                              │    │
+  │   │  Load base resume        │   │  Load company context        │    │
+  │   │  Load JobAnalysis        │   │  Load JobAnalysis            │    │
+  │   │  GPT-4o rewrites:        │   │  GPT-4o generates:           │    │
+  │   │  - Professional summary  │   │  - Opening paragraph         │    │
+  │   │  - Experience bullets    │   │  - Skills alignment          │    │
+  │   │  - Project bullets       │   │  - Company-specific closing  │    │
+  │   │  - Skills to highlight   │   │                              │    │
+  │   │  - Inject ATS keywords   │   │  Tone: professional / tech   │    │
+  │   │  - Estimate ATS score    │   │  Stored as versioned record  │    │
+  │   │  Render to PDF           │   │  Attached to Application     │    │
+  │   │  Stored in /storage/     │   │                              │    │
+  │   └──────────────────────────┘   └──────────────────────────────┘    │
   │                                                                      │
   └─────────────────────────────────────┬────────────────────────────────┘
                                         │
@@ -198,29 +198,29 @@ The central automation cycle executes every 6 hours via `run_main_agent_cycle`. 
   │                                                                      │
   │   Respects: AUTO_APPLY_DAILY_LIMIT · AUTO_APPLY_MATCH_THRESHOLD      │
   │                                                                      │
-  │   ┌─────────────────────────────────────────────────────────────┐   │
-  │   │  IF AUTO_APPLY_REQUIRE_APPROVAL = true                      │   │
-  │   │                                                             │   │
-  │   │  Send Telegram notification with job details + match score  │   │
-  │   │  Application status = PENDING_APPROVAL                      │   │
-  │   │  Wait for user reply: Approve / Skip                        │   │
-  │   │  On approval → status = QUEUED → Playwright bot runs        │   │
-  │   └─────────────────────────────────────────────────────────────┘   │
+  │   ┌─────────────────────────────────────────────────────────────┐    │
+  │   │  IF AUTO_APPLY_REQUIRE_APPROVAL = true                      │    │
+  │   │                                                             │    │
+  │   │  Send Telegram notification with job details + match score  │    │
+  │   │  Application status = PENDING_APPROVAL                      │    │
+  │   │  Wait for user reply: Approve / Skip                        │    │
+  │   │  On approval → status = QUEUED → Playwright bot runs        │    │
+  │   └─────────────────────────────────────────────────────────────┘    │
   │                                                                      │
   │   Playwright Apply Bot:                                              │
   │                                                                      │
   │   Detect ATS platform:                                               │
-  │   ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐      │
-  │   │  Workday   │ │ Greenhouse │ │   Lever    │ │  LinkedIn  │      │
-  │   │myworkday.. │ │greenhouse. │ │  lever.co  │ │ Easy Apply │      │
-  │   └────────────┘ └────────────┘ └────────────┘ └────────────┘      │
-  │   ┌────────────┐ ┌────────────┐                                     │
-  │   │ Internshala│ │   Indeed   │                                     │
-  │   └────────────┘ └────────────┘                                     │
+  │   ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐        │
+  │   │  Workday   │ │ Greenhouse │ │   Lever    │ │  LinkedIn  │        │
+  │   │myworkday.. │ │greenhouse. │ │  lever.co  │ │ Easy Apply │        │
+  │   └────────────┘ └────────────┘ └────────────┘ └────────────┘        │
+  │   ┌────────────┐ ┌────────────┐                                      │
+  │   │ Internshala│ │   Indeed   │                                      │
+  │   └────────────┘ └────────────┘                                      │
   │                                                                      │
-  │   Fill form → Upload resume PDF → Attach cover letter               │
-  │   → Answer standard questions → Submit                              │
-  │   → On CAPTCHA: pause, notify user via Telegram, await resolution   │
+  │   Fill form → Upload resume PDF → Attach cover letter                │
+  │   → Answer standard questions → Submit                               │
+  │   → On CAPTCHA: pause, notify user via Telegram, await resolution    │
   │                                                                      │
   └─────────────────────────────────────┬────────────────────────────────┘
                                         │
@@ -335,7 +335,7 @@ Each job description passes through a two-stage LLM pipeline. The dual-model des
   │           quick_reason (1 sentence)                                  │
   │                                                                      │
   │  if preliminary_score < threshold:                                   │
-  │       status = SKIPPED  →  pipeline exits                           │
+  │       status = SKIPPED  →  pipeline exits                            │
   └──────────────────────────────────┬───────────────────────────────────┘
                                      │ score >= threshold
                                      ▼
@@ -345,27 +345,27 @@ Each job description passes through a two-stage LLM pipeline. The dual-model des
   │  Input:   full job description + user profile (RAG-enhanced)         │
   │                                                                      │
   │  Extracts:                                                           │
-  │  ┌─────────────────────────────────────────────────────────────┐    │
-  │  │  required_skills      []   preferred_skills      []         │    │
-  │  │  tech_stack           []   ats_keywords           []        │    │
-  │  │  min_years_experience  0   max_years_experience  null       │    │
-  │  │  education_requirement     role_category                    │    │
-  │  │  seniority_detected        is_internship          bool      │    │
-  │  │  estimated_salary_min      estimated_salary_max             │    │
-  │  │  job_difficulty            key_responsibilities  []         │    │
-  │  │  ai_summary (2 sentences)  ai_recommendation                │    │
-  │  └─────────────────────────────────────────────────────────────┘    │
+  │  ┌─────────────────────────────────────────────────────────────┐     │
+  │  │  required_skills      []   preferred_skills      []         │     │
+  │  │  tech_stack           []   ats_keywords           []        │     │
+  │  │  min_years_experience  0   max_years_experience  null       │     │
+  │  │  education_requirement     role_category                    │     │
+  │  │  seniority_detected        is_internship          bool      │     │
+  │  │  estimated_salary_min      estimated_salary_max             │     │
+  │  │  job_difficulty            key_responsibilities  []         │     │
+  │  │  ai_summary (2 sentences)  ai_recommendation                │     │
+  │  └─────────────────────────────────────────────────────────────┘     │
   │                                                                      │
   │  Computes:                                                           │
-  │  ┌─────────────────────────────────────────────────────────────┐    │
-  │  │  match_score     = skills overlap + experience fit           │    │
-  │  │                  + role category alignment (0-100)           │    │
-  │  │  priority_score  = match_score + recency bonus               │    │
-  │  │                  + company prestige - estimated_competition  │    │
-  │  │  skill_gaps      = required_skills - user.skills             │    │
-  │  └─────────────────────────────────────────────────────────────┘    │
+  │  ┌─────────────────────────────────────────────────────────────┐     │
+  │  │  match_score     = skills overlap + experience fit          │     │
+  │  │                  + role category alignment (0-100)          │     │
+  │  │  priority_score  = match_score + recency bonus              │     │
+  │  │                  + company prestige - estimated_competition │     │
+  │  │  skill_gaps      = required_skills - user.skills            │     │
+  │  └─────────────────────────────────────────────────────────────┘     │
   │                                                                      │
-  │  Persists:  JobAnalysis record  ·  status = ANALYZED                │
+  │  Persists:  JobAnalysis record  ·  status = ANALYZED                 │
   └──────────────────────────────────────────────────────────────────────┘
 
   role_category:  computer_vision | nlp | mlops | data_science |
@@ -426,8 +426,8 @@ Each job description passes through a two-stage LLM pipeline. The dual-model des
                         │  description  │     │  is_base          │ │
                         │  job_type     │     │  performance_data │ │
                         │  work_mode    │     └───────────────────┘ │
-                        │  salary_min   │                            │
-                        │  salary_max   │  1:1                       │
+                        │  salary_min   │                           │
+                        │  salary_max   │  1:1                      │
                         │  status       │◄─────────────────────┐    │
                         └───────┬───────┘                      │    │
                                 │ 1:1                          │    │
@@ -445,7 +445,7 @@ Each job description passes through a two-stage LLM pipeline. The dual-model des
                         │  ai_summary       │         └────────┬────────┘
                         └───────────────────┘                  │ 1:N
                                                        ┌────────▼────────┐
-                                                       │application_events│
+                                                       │application_event│
                                                        │                 │
                                                        │  from_status    │
                                                        │  to_status      │
@@ -865,7 +865,7 @@ When an application advances to `INTERVIEW_SCHEDULED`, the system automatically 
                 ▼
   ┌─────────────────────────────────────────────────────────────────┐
   │  Company Intelligence Report  (GPT-4o + web search)             │
-  │                                                                  │
+  │                                                                 │
   │  products_and_services     recent_news                          │
   │  tech_stack                company_culture                      │
   │  salary_data               glassdoor_rating                     │
@@ -874,36 +874,36 @@ When an application advances to `INTERVIEW_SCHEDULED`, the system automatically 
                 │
                 ▼
   ┌─────────────────────────────────────────────────────────────────┐
-  │  Question Bank Generation  (GPT-4o, based on role + JD)          │
-  │                                                                  │
-  │  Technical Questions:                                            │
+  │  Question Bank Generation  (GPT-4o, based on role + JD)         │
+  │                                                                 │
+  │  Technical Questions:                                           │
   │  { question, expected_answer, difficulty, topic }               │
   │  e.g. "Explain the ResNet skip connection and its purpose"      │
-  │                                                                  │
-  │  Behavioural Questions:                                          │
-  │  { question, star_framework_hint }                               │
+  │                                                                 │
+  │  Behavioural Questions:                                         │
+  │  { question, star_framework_hint }                              │
   │  e.g. "Describe a time you debugged a production ML model"      │
-  │                                                                  │
+  │                                                                 │
   │  Study Topics:  ranked list of concepts to review               │
   └─────────────────────────────────────────────────────────────────┘
                 │
                 ▼
   ┌─────────────────────────────────────────────────────────────────┐
-  │  Mock Interview Sessions  (AI Interviewer — GPT-4o)              │
-  │                                                                  │
-  │  Full transcript  [{role, content, timestamp}]                   │
-  │  Scoring:                                                        │
-  │    overall_score         (0-100)                                 │
-  │    technical_depth_score                                         │
-  │    communication_score                                           │
-  │    confidence_score                                              │
-  │    improvement_suggestions []                                    │
+  │  Mock Interview Sessions  (AI Interviewer — GPT-4o)             │
+  │                                                                 │
+  │  Full transcript  [{role, content, timestamp}]                  │
+  │  Scoring:                                                       │
+  │    overall_score         (0-100)                                │
+  │    technical_depth_score                                        │
+  │    communication_score                                          │
+  │    confidence_score                                             │
+  │    improvement_suggestions []                                   │
   └─────────────────────────────────────────────────────────────────┘
                 │
                 ▼
   ┌─────────────────────────────────────────────────────────────────┐
-  │  Interview Recording Analysis  (Whisper + GPT-4o)                │
-  │                                                                  │
+  │  Interview Recording Analysis  (Whisper + GPT-4o)               │
+  │                                                                 │
   │  Transcription via OpenAI Whisper                               │
   │  Analysis:  filler_word_count, speech_clarity, confidence_level │
   │             technical_depth, pacing, improvement_notes          │
