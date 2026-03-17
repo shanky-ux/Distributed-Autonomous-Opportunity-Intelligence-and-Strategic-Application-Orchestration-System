@@ -56,7 +56,7 @@ You configure your profile once. D.A.O.I.S.A.O.S handles the rest.
 | 📊 **Full Lifecycle Tracking** | 14-state FSM with complete audit trail from discovery to offer |
 | 🎤 **Interview Prep Engine** | Company intel, Q&A banks, AI mock sessions, Whisper audio analysis |
 | 💬 **AI Chat Assistant** | "Apply to the top 3 AI internships in Europe" — and it does |
-| 📈 **Market Intelligence** | Skill demand trends, salary bands, hiring velocity snapshots |
+| 📈 **Market Intelligence** | Skill demand trends, salary bands, hiring velocity snapshot |
 
 ---
 
