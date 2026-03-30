@@ -218,7 +218,7 @@ cp career_platform/.env.example career_platform/.env
 # Fill in your profile, API keys, and credentials — see Configuration below
 ```
 
-### 4 · Database
+### 4 · Databases
 
 ```bash
 psql -U postgres -c "CREATE DATABASE career_platform;"
