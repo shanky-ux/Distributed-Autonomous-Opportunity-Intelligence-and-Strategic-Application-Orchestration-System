@@ -272,7 +272,7 @@ curl -X POST http://localhost:8000/api/auth/login \
 
 ---
 
-## ⚙️ Configuration
+## ⚙️ Configurations
 
 All settings live in `career_platform/.env`. A complete template is in `.env.example`.
 
