@@ -11,7 +11,7 @@
 ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
 ```
 
-### **Distributed Autonomous Opportunity Intelligence and Strategic Application Orchestration Systems**
+### **Distributed Autonomous Opportunity Intelligence and Strategic Application Orchestration System**
 
 *Set it. Forget it. Get hired.*
 
